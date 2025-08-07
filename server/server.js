@@ -9,6 +9,7 @@ import milestoneRoutes from "./routes/milestoneRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
+import checkAvailability from "./routes/checkAvailability.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 connectMongoDB();
 
+app.use("/availability", checkAvailability);
 app.use("/user", userRoutes);
 app.use("/milestone", milestoneRoutes);
 app.use("/posts", postRoutes);
