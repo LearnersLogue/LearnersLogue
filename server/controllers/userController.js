@@ -62,7 +62,8 @@ async function sendOtp(req, res) {
 
   const otp = otpGenerator.generate(6, {
     digits: true,
-    upperCase: false,
+    lowerCaseAlphabets: false, // Add this line
+    upperCaseAlphabets: false, // Recommended to use this instead of upperCase
     specialChars: false,
   });
 
@@ -170,6 +171,36 @@ async function loginUser(req, res) {
     });
   } catch (err) {
     console.error("Login Error:", err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+}
+
+// ✅ Reset Password after OTP verification
+async function resetPassword(req, res) {
+  try {
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword) {
+      return res
+        .status(400)
+        .json({ message: "Email and new password required" });
+    }
+
+    // 🔍 Find user
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 🔐 Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (err) {
+    console.error("Reset Password Error:", err);
     res.status(500).json({ message: "Something went wrong" });
   }
 }
@@ -331,4 +362,5 @@ export {
   followUser,
   unfollowUser,
   uploadProfilePic,
+  resetPassword,
 };

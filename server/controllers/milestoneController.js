@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 
 // 📥 Add Milestone
+// 📥 Add Milestone with optional image
 export const addMilestone = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -18,7 +19,9 @@ export const addMilestone = async (req, res) => {
       description,
       awardedBy,
       grade,
+      image: req.file?.location || null, // ✅ store image URL if uploaded
     };
+
     user.milestones.push(newMilestone);
     await user.save();
 
@@ -62,10 +65,21 @@ export const updateMilestone = async (req, res) => {
     if (!milestone)
       return res.status(404).json({ message: "Milestone not found" });
 
+    // Update text fields
     Object.assign(milestone, updatedFields);
+
+    // Handle image update if new image is uploaded
+    if (req.file && req.file.location) {
+      milestone.image = req.file.location;
+    }
+
     await user.save();
 
-    res.status(200).json({ message: "Milestone updated", milestone });
+    res.status(200).json({
+      message: "Milestone updated",
+      milestone,
+      milestones: user.milestones,
+    });
   } catch (error) {
     res
       .status(500)

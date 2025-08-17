@@ -22,9 +22,35 @@ const eventSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    // NEW: Track registrations
+    registrations: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        registeredAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
+
+// Virtual field to get registration count
+eventSchema.virtual("registrationCount").get(function () {
+  return this.registrations.length;
+});
+
+// Method to check if user is registered
+eventSchema.methods.isUserRegistered = function (userId) {
+  return this.registrations.some(
+    (reg) => reg.user.toString() === userId.toString()
+  );
+};
 
 const Event = mongoose.model("Event", eventSchema);
 

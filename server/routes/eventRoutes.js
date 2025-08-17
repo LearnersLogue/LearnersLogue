@@ -5,6 +5,7 @@ import {
   getAllEvents,
   getMyHostedEvents,
   registerForEvent,
+  unregisterFromEvent,
 } from "../controllers/eventController.js";
 
 import { Protect } from "../middleware/authMiddleware.js";
@@ -16,5 +17,7 @@ router.get("/getEvents", Protect, getAllEvents);
 router.get("/myEvents", Protect, getMyHostedEvents);
 router.post("/register/:id", Protect, registerForEvent);
 router.delete("/delete/:id", Protect, deleteEvent);
+
+router.delete("/unregister/:id", Protect, unregisterFromEvent);
 
 export default router;

@@ -8,6 +8,7 @@ const milestoneSchema = new mongoose.Schema({
   description: { type: String },
   awardedBy: { type: String },
   grade: { type: String },
+  image: { type: String },
 });
 
 const userSchema = new mongoose.Schema(

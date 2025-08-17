@@ -9,6 +9,7 @@ import {
   followUser,
   unfollowUser,
   uploadProfilePic,
+  resetPassword,
 } from "../controllers/userController.js";
 
 import upload from "../middleware/uploadMiddleware.js";
@@ -20,6 +21,7 @@ router.post("/register", registerUser);
 router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtp);
 router.post("/login", loginUser);
+router.post("/resetPassword", resetPassword);
 router.get("/profile/:id", getProfile);
 router.put("/updateProfile/:id", updateProfile);
 
